@@ -13,7 +13,7 @@
 
 ### 📹 Previa
 
-[![Preview the App](assets/readme/prototype1.png)](https://www.youtube.com)
+[![Preview the App](assets/readme/prototype1.png)](https://youtu.be/P1B6dkKseVM)
 
 ---
 
@@ -46,27 +46,6 @@
 
 ---
 
-## 🔄 Fluxograma
-
-<details>
-<summary>📋 Usuario</summary>
-
-1. **?**
-    - ?
-  
-2. **?**
-    - ?
-  
-3. **?**
-    - ?
-  
-4. **?**
-    - ?
-  
-5. **?**
-    -?
-</details>
-
 ## 🛠 Tech Stack
 
 <details>
@@ -84,23 +63,5 @@
 - Clean Dart
 
 </details>
-
-<details>
-<summary>Back-end</summary>
-
-### External Packages 
-- null
-
-### Architecture 
-- null
-
-</details>
-
-
----
-
-## 🌈 Futuro Roadmap 
-
-???
 
 ---
