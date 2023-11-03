@@ -4,38 +4,23 @@ import 'package:hackathon_satshack/core/extensions/build_context_utils.dart';
 import 'package:hackathon_satshack/core/styles/colors.dart';
 import 'package:hackathon_satshack/core/styles/text_styles.dart';
 import 'package:hackathon_satshack/module/chat/infra/model/question_answer.dart';
-import 'package:hackathon_satshack/module/chat/presenter/components/answer_widget.dart';
-import 'package:hackathon_satshack/module/chat/presenter/components/loading_widget.dart';
-import 'package:hackathon_satshack/module/chat/presenter/components/text_input_widget.dart';
-import 'package:hackathon_satshack/module/chat/presenter/components/user_question_widget.dart';
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+class FlowChartScreen extends StatefulWidget {
+  const FlowChartScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<FlowChartScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<FlowChartScreen> {
   String? answer;
-  final loadingNotifier = ValueNotifier<bool>(false);
   final List<QuestionAnswer> questionAnswers = [];
 
   late ScrollController scrollController;
-  late TextEditingController inputQuestionController;
-
-  @override
-  void initState() {
-    inputQuestionController = TextEditingController();
-    scrollController = ScrollController();
-    super.initState();
-  }
 
   @override
   void dispose() {
-    inputQuestionController.dispose();
-    loadingNotifier.dispose();
     scrollController.dispose();
     super.dispose();
   }
@@ -78,13 +63,14 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Modular.to.navigate('/');
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       width: 111,
                       height: 38,
                       decoration: ShapeDecoration(
-                        color: AppColors.primary,
                         shape: RoundedRectangleBorder(
                           side: const BorderSide(
                               width: 1, color: Color(0xFFE8E8E8)),
@@ -101,14 +87,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     width: 20,
                   ),
                   InkWell(
-                    onTap: () {
-                      Modular.to.navigate('flowchart');
-                    },
+                    onTap: () {},
                     child: Container(
                       alignment: Alignment.center,
                       width: 111,
                       height: 38,
                       decoration: ShapeDecoration(
+                        color: AppColors.primary,
                         shape: RoundedRectangleBorder(
                           side: const BorderSide(
                               width: 1, color: Color(0xFFE8E8E8)),
@@ -124,77 +109,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
-            buildChatList(),
-            TextInputWidget(
-              textController: inputQuestionController,
-              onSubmitted: () => _sendMessage(),
-            )
+            SizedBox(
+              width: context.mediaWidth * 0.8,
+              height: context.mediaHeight * 0.7,
+              child: Image.asset('assets/flow.jpg'),
+              )
           ],
         ),
       ),
     );
-  }
-
-  Expanded buildChatList() {
-    return Expanded(
-      child: ListView.separated(
-        controller: scrollController,
-        separatorBuilder: (context, index) => const SizedBox(
-          height: 12,
-        ),
-        physics: const BouncingScrollPhysics(),
-        padding:
-            const EdgeInsets.only(bottom: 20, left: 16, right: 16, top: 16),
-        itemCount: questionAnswers.length,
-        itemBuilder: (BuildContext context, int index) {
-          final question = questionAnswers[index].question;
-          final answer = questionAnswers[index].answer;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              UserQuestionWidget(question: question),
-              const SizedBox(height: 16),
-              ValueListenableBuilder(
-                valueListenable: loadingNotifier,
-                builder: (_, bool isLoading, __) {
-                  if (answer.isEmpty && isLoading) {
-                    _scrollToBottom();
-                    return const LoadingWidget();
-                  } else {
-                    return AnswerWidget(
-                      answer: answer.toString().trim(),
-                    );
-                  }
-                },
-              )
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.animateTo(
-        scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  void _sendMessage() async {
-    final question = inputQuestionController.text;
-    inputQuestionController.clear();
-    loadingNotifier.value = true;
-
-    questionAnswers.add(QuestionAnswer(
-        question: "multsig 3x3",
-        answer: StringBuffer("thresh(3,pk(key_1),pk(key_2),pk(key_3))")));
-
-    setState(() => questionAnswers
-        .add(QuestionAnswer(question: question, answer: StringBuffer())));
   }
 }
